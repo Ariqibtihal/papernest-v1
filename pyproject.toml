@@ -1,0 +1,74 @@
+[project]
+name = "paperlens"
+version = "0.1.0"
+description = "Research Paper Intelligence Aggregator — multi-source academic search, dedup, and ranking."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "PaperLens" }]
+license = { text = "MIT" }
+
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "httpx>=0.27",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.4",
+    "sqlalchemy>=2.0",
+    "aiosqlite>=0.20",
+    "asyncpg>=0.29",
+    "alembic>=1.13",
+    "tenacity>=9.0",
+    "rapidfuzz>=3.9",
+    "loguru>=0.7",
+    "python-dateutil>=2.9",
+    "feedparser>=6.0",
+    "bibtexparser>=1.4",
+    "pandas>=2.2",
+    "apscheduler>=3.10",
+    "python-jose[cryptography]>=3.3",
+    "passlib[bcrypt]>=1.7",
+    "python-multipart>=0.0.6",
+    "slowapi>=0.1.9",
+    "email-validator>=2.1",
+    "psycopg2-binary>=2.9",
+    "google-genai>=1.0",
+    "redis>=5.0",
+]
+
+[project.optional-dependencies]
+frontend = [
+    "streamlit>=1.38",
+]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.23",
+    "respx>=0.21",
+    "ruff>=0.6",
+    "mypy>=1.11",
+]
+ai = [
+    "openai>=1.40",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+paperlens = "paperlens_cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app", "connectors", "services", "models", "schemas", "workers", "utils"]
+include = ["paperlens_cli.py"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["E501"]

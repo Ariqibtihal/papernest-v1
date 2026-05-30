@@ -1,0 +1,282 @@
+<div align="center">
+
+# 📚 PaperNest
+
+### Open scholarly search across 200M+ research papers
+
+Aggregate, deduplicate, and rank academic papers from **8 major sources** in one search.
+
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tests](https://img.shields.io/badge/tests-167%20passing-success)](#testing)
+[![License](https://img.shields.io/badge/license-MIT-blue)](#license)
+
+</div>
+
+---
+
+## ✨ Overview
+
+**PaperNest** is a research paper intelligence aggregator. It searches eight academic
+databases at once, merges duplicate records across sources, and ranks results by a blend
+of relevance, citation count, journal quality, and source reliability — so you spend
+less time hunting and more time reading.
+
+```
+        ┌──────────┐   ┌──────────┐   ┌──────────┐
+        │ Crossref │   │ OpenAlex │   │  arXiv   │   ... 8 sources
+        └────┬─────┘   └────┬─────┘   └────┬─────┘
+             └──────────────┼──────────────┘
+                            ▼
+                  ┌────────────────────┐
+                  │  Dedup + Ranking   │  ← fuzzy match, DOI merge,
+                  │  Journal quality   │     Scimago quartile, OA filter
+                  └─────────┬──────────┘
+                            ▼
+                  ┌────────────────────┐
+                  │  React + FastAPI   │  ← one clean result list
+                  └────────────────────┘
+```
+
+---
+
+## 🎯 Features
+
+- **Multi-source search** — Crossref, OpenAlex, arXiv, Semantic Scholar, PubMed, DOAJ, Europe PMC, and CORE, queried in parallel.
+- **Smart deduplication** — merges duplicate papers across sources via DOI matching and fuzzy title comparison, keeping the richest combined metadata.
+- **Quality signals** — Scimago journal quartile badges (Q1–Q4) and predatory-journal heuristics shown directly on every result.
+- **Relevance ranking** — combines semantic relevance, citation count, recency, venue quality, and open-access status.
+- **Open access first** — one-click filter to surface free full-text versions.
+- **Saved papers & alerts** — personal reading lists and search alerts with background notifications.
+- **Export ready** — JSON, CSV, and BibTeX for any citation manager.
+- **Secure by default** — JWT auth, account lockout, rate limiting, security headers, and strict CSP.
+
+---
+
+## 🚀 Quickstart
+
+> **Prerequisite:** [Node.js LTS](https://nodejs.org/) must be installed.
+> Everything else (Python, `uv`, virtualenv, dependencies) is bootstrapped automatically.
+
+After cloning, you only need **two commands** — just like a single-binary tool:
+
+### Windows
+
+```cmd
+git clone https://github.com/yourusername/papernest.git
+cd papernest
+
+paperlens.bat setup     :: install Python + Node deps, create .env
+paperlens.bat dev       :: run backend + frontend together
+```
+
+### macOS / Linux
+
+```bash
+git clone https://github.com/Ariqibtihal/papernest.git
+cd papernest
+
+chmod +x ./paperlens     # first time only
+./paperlens setup        # install Python + Node deps, create .env
+./paperlens dev          # run backend + frontend together
+```
+
+That's it. Open:
+
+| URL | What |
+|-----|------|
+| http://localhost:5173 | Frontend (React dev server) |
+| http://localhost:8000/docs | API docs (Swagger UI) |
+| http://localhost:8000/healthz | Health check |
+
+The launcher auto-installs [`uv`](https://docs.astral.sh/uv/) if missing, syncs all
+Python dependencies, installs Node packages, and creates your `.env` from the template.
+
+---
+
+## 🛠️ The `paperlens` CLI
+
+A single command runs the whole project. After `setup`, all subcommands are available
+via the wrapper (`paperlens.bat` / `./paperlens`) or directly through `uv run paperlens`.
+
+| Command | What it does |
+|---------|--------------|
+| `paperlens setup` | Install Python + Node dependencies and create `.env` (first run) |
+| `paperlens dev` | Run backend (`uvicorn --reload`) + frontend (Vite) together |
+| `paperlens start` | Production mode: build the frontend, then serve everything via FastAPI |
+| `paperlens build` | Build the frontend for production only |
+| `paperlens test` | Run the test suite (`pytest`) |
+| `paperlens db upgrade` | Apply database migrations (Alembic) |
+| `paperlens db revision -m "msg"` | Create a new autogenerated migration |
+| `paperlens doctor` | Diagnose your environment and report any missing prerequisites |
+
+> 💡 If something doesn't work, run `paperlens doctor` first — it checks `uv`, Node, the
+> virtualenv, installed dependencies, and warns if a stray global `uvicorn` is shadowing
+> the project one.
+
+---
+
+## 🏗️ Tech Stack
+
+**Backend**
+- [FastAPI](https://fastapi.tiangolo.com/) + [Uvicorn](https://www.uvicorn.org/) — async web framework
+- [SQLAlchemy 2.0](https://www.sqlalchemy.org/) + [Alembic](https://alembic.sqlalchemy.org/) — ORM & migrations
+- [httpx](https://www.python-httpx.org/) + [tenacity](https://tenacity.readthedocs.io/) — async HTTP with retries
+- [Pydantic](https://docs.pydantic.dev/) — validation & settings
+- [APScheduler](https://apscheduler.readthedocs.io/) — background alert jobs
+- [rapidfuzz](https://github.com/maxbachmann/RapidFuzz) — fuzzy dedup matching
+- SQLite (dev) → PostgreSQL (production)
+
+**Frontend**
+- [React 18](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- [Vite 6](https://vitejs.dev/) — build tool
+- [Tailwind CSS 3](https://tailwindcss.com/) + [Radix UI](https://www.radix-ui.com/) primitives
+- [Zustand](https://zustand-demo.pmnd.rs/) — state, [Recharts](https://recharts.org/) — charts
+
+**Tooling**
+- [uv](https://docs.astral.sh/uv/) — Python package & env manager
+- [ruff](https://docs.astral.sh/ruff/) + [mypy](https://mypy-lang.org/) — lint & type-check
+- [pytest](https://docs.pytest.org/) + [respx](https://lundberg.github.io/respx/) — testing
+
+---
+
+## 📁 Project Structure
+
+```
+.
+├── app/                # FastAPI application
+│   ├── api/            # Route handlers (search, saved, alerts, export, auth)
+│   ├── core/           # Auth, rate limiting, security headers, HTTP client
+│   ├── db/             # Database session & base
+│   ├── config.py       # Pydantic settings
+│   └── main.py         # App entry point + lifespan
+├── connectors/         # One module per academic source + registry
+├── services/           # Business logic (search, dedup, ranking, auth, journal quality)
+├── models/             # SQLAlchemy ORM models
+├── schemas/            # Pydantic DTOs (PaperDTO, SearchFilters, auth)
+├── workers/            # Background jobs (alert worker)
+├── utils/              # Helpers (security, export, normalize)
+├── alembic/            # Database migrations
+├── frontend/           # React + Vite + Tailwind SPA
+├── tests/              # pytest suite
+├── paperlens_cli.py    # Unified CLI
+├── paperlens.bat       # Windows bootstrap launcher
+└── paperlens           # Unix bootstrap launcher
+```
+
+---
+
+## ⚙️ Configuration
+
+Copy `.env.example` to `.env` (done automatically by `paperlens setup`) and adjust:
+
+```ini
+APP_ENV=development
+DATABASE_URL=sqlite+aiosqlite:///./paperlens.db
+CONTACT_EMAIL=you@example.com           # polite headers for Crossref/OpenAlex
+JWT_SECRET_KEY=change-this-in-production # generate: openssl rand -hex 32
+CORS_ORIGINS=http://localhost:5173,http://localhost:8000
+```
+
+### API keys (all optional)
+
+PaperNest works with **zero API keys**. Some sources give higher rate limits if you register:
+
+| Source | Key | Benefit |
+|--------|-----|---------|
+| Semantic Scholar | `SEMANTIC_SCHOLAR_API_KEY` | Larger quota |
+| CORE | `CORE_API_KEY` | Full-text OA search |
+| NCBI / PubMed | `NCBI_API_KEY` | 10 req/s (vs 3 without) |
+
+Crossref, OpenAlex, arXiv, DOAJ, and Europe PMC need no key — just set `CONTACT_EMAIL`
+to join the polite request pool.
+
+---
+
+## 🔒 Security
+
+- **JWT authentication** with access + refresh token rotation
+- **Account lockout** after 5 failed login attempts (15-minute lock)
+- **Rate limiting** per endpoint (30/min search, 10/min login, etc.)
+- **Timing-safe** login to prevent email enumeration
+- **Security headers** — CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, COOP
+- **Strict CSP** in production (`connect-src 'self'`, no inline scripts)
+- **Input validation** on all endpoints via Pydantic
+- **GZip compression** for static assets
+
+> ⚠️ Always set a strong `JWT_SECRET_KEY` and use PostgreSQL in production — the app
+> validates this on startup and refuses to run with insecure defaults in `APP_ENV=production`.
+
+---
+
+## 🚢 Production Deployment
+
+```bash
+# Build the frontend and serve everything from FastAPI
+paperlens start
+```
+
+`paperlens start` builds the React app into `frontend/dist`, which FastAPI then serves
+as static files (SPA fallback included). The API stays available under `/api/v1/*` and
+docs under `/docs`.
+
+For production, set in `.env`:
+
+```ini
+APP_ENV=production
+DATABASE_URL=postgresql+asyncpg://user:pass@host:5432/papernest
+JWT_SECRET_KEY=<openssl rand -hex 32>
+CORS_ORIGINS=https://yourdomain.com
+```
+
+Then apply migrations and start with multiple workers:
+
+```bash
+paperlens db upgrade
+paperlens start --workers 4
+```
+
+---
+
+## 🧪 Testing
+
+```bash
+paperlens test              # full suite
+paperlens test -k auth      # only auth tests
+uv run pytest --tb=short    # direct pytest invocation
+```
+
+The suite covers authentication, rate limiting, account lockout, input validation,
+security headers, search routing, and deduplication.
+
+---
+
+## 🤝 Contributing
+
+1. Fork and create a feature branch.
+2. Run `paperlens doctor` to verify your environment.
+3. Make changes and add tests.
+4. Ensure `paperlens test` passes and `uv run ruff check .` is clean.
+5. Open a pull request.
+
+---
+
+## 📜 License
+
+[MIT](LICENSE) — free to use, modify, and distribute.
+
+---
+
+## 🙏 Acknowledgments
+
+Built on open scholarly data from Crossref, OpenAlex, arXiv, Semantic Scholar, PubMed,
+DOAJ, Europe PMC, and CORE. Journal quality data from the
+[Scimago Journal Rank](https://www.scimagojr.com/).
+
+<div align="center">
+
+**Made with care for open research.**
+
+</div>

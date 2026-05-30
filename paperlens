@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# ──────────────────────────────────────────────────────────────
+#  PaperLens bootstrap launcher (macOS / Linux)
+#
+#  Tujuan:
+#    Setelah `git clone`, user cukup ketik:
+#        ./paperlens setup
+#        ./paperlens dev
+#    tanpa perlu install Python, uv, atau virtualenv terlebih dahulu.
+#
+#  Logika:
+#    1. Pastikan `uv` ada (auto-install via shell kalau tidak).
+#    2. Pastikan dependency Python ter-sync (uv sync kalau pertama kali).
+#    3. Forward semua argumen ke `uv run paperlens <args>`.
+# ──────────────────────────────────────────────────────────────
+
+set -e
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# ── 1. Cek uv ──────────────────────────────────────────────────
+if ! command -v uv >/dev/null 2>&1; then
+    echo "[paperlens] uv tidak ditemukan di PATH."
+    echo "[paperlens] Mencoba install uv..."
+    if command -v curl >/dev/null 2>&1; then
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+    elif command -v wget >/dev/null 2>&1; then
+        wget -qO- https://astral.sh/uv/install.sh | sh
+    else
+        echo "[paperlens] curl/wget tidak ada. Install uv manual:"
+        echo "  https://docs.astral.sh/uv/getting-started/installation/"
+        exit 1
+    fi
+    # uv installer typically puts binary di ~/.local/bin atau ~/.cargo/bin
+    export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
+    if ! command -v uv >/dev/null 2>&1; then
+        echo "[paperlens] uv masih belum ada di PATH. Restart shell lalu jalankan ulang."
+        exit 1
+    fi
+fi
+
+# ── 2. First-run sync ──────────────────────────────────────────
+if [ ! -d "$ROOT/.venv" ]; then
+    echo "[paperlens] First run — installing Python dependencies..."
+    (cd "$ROOT" && uv sync --extra frontend --extra dev)
+fi
+
+# ── 3. Forward ke CLI ──────────────────────────────────────────
+cd "$ROOT"
+exec uv run paperlens "$@"

@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Open Runde (self-hosted from Style.json fontLinks; SIL OFL) ── */
+@font-face {
+  font-family: "Open Runde";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./assets/fonts/open-runde-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Open Runde";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./assets/fonts/open-runde-500.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Open Runde";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("./assets/fonts/open-runde-600.woff2") format("woff2");
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    /* Cegah horizontal scroll yang muncul dari decorative shapes (blob
+       blur, paper fan dengan rotate, partikel hero). `overflow-x: clip`
+       tidak membuat scroll container baru, jadi position: sticky di
+       child element tetap berfungsi normal — beda dengan
+       `overflow-x: hidden` yang akan break TopNav sticky. */
+    overflow-x: clip;
+  }
+
+  /* PaperNest light theme — deep-ocean blue + Blue Rice accent */
+  :root {
+    /* Surface */
+    --background: 220 14% 98%;       /* off-white hangat */
+    --foreground: 222 47% 11%;       /* slate-900 */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Brand */
+    --primary: 209 72% 42%;          /* deep ocean blue #1e6bb8 */
+    --primary-foreground: 0 0% 100%;
+    --primary-soft: 205 76% 83%;     /* Blue Rice #b1d8f4 */
+
+    /* Surfaces sekunder */
+    --secondary: 207 65% 96%;        /* very-soft blue tint */
+    --secondary-foreground: 222 47% 11%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 215 16% 47%; /* slate-600 */
+    --accent: 207 65% 96%;           /* section sekunder */
+    --accent-foreground: 222 47% 11%;
+
+    /* Borders & inputs */
+    --border: 214 32% 91%;           /* slate-200 */
+    --input: 214 32% 91%;
+    --ring: 209 72% 42%;
+
+    /* Quartile */
+    --q1: 142 76% 36%;               /* emerald-600 */
+    --q2: 200 98% 39%;               /* sky-600 */
+    --q3: 38 96% 41%;                /* amber-600 */
+    --q4: 215 20% 65%;               /* slate-400 */
+
+    /* Status */
+    --destructive: 0 84% 60%;        /* red-600 */
+    --destructive-foreground: 0 0% 100%;
+
+    /* Misc */
+    --radius: 0.5rem;                /* 8px button standar */
+    --link: 209 72% 42%;             /* link = primary */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter Variable", "Inter", system-ui, -apple-system,
+      BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.18);
+  }
+}
+
+@layer utilities {
+  .link-color {
+    color: hsl(var(--link));
+  }
+  .link-color:hover {
+    text-decoration: underline;
+  }
+}
+
+/* ── Reduced motion: matikan animasi hero ── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-left,
+  .animate-float-right,
+  .animate-chip-float,
+  .animate-scan-beam,
+  .animate-window-float {
+    animation: none !important;
+  }
+}

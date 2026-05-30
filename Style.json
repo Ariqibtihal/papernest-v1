@@ -1,0 +1,172 @@
+{
+  "mode": "dark",
+  "typography": {
+    "p": {
+      "fontFamily": "Open Runde",
+      "letterSpacing": "-0.18px",
+      "fontSize": "18px",
+      "lineHeight": "25.2px",
+      "fontFallbacks": [
+        "Open Runde",
+        "Open Runde Placeholder",
+        "sans-serif"
+      ],
+      "fontWeight": 400
+    },
+    "headings": {
+      "h1": {
+        "fontFamily": "Open Runde",
+        "letterSpacing": "-2.24px",
+        "fontSize": "56px",
+        "lineHeight": "67px",
+        "fontFallbacks": [
+          "Open Runde",
+          "Open Runde Placeholder",
+          "sans-serif"
+        ],
+        "fontWeight": 600
+      },
+      "h2": {
+        "fontFamily": "Open Runde",
+        "letterSpacing": "-1.52px",
+        "fontSize": "38px",
+        "lineHeight": "41.8px",
+        "fontFallbacks": [
+          "Open Runde",
+          "Open Runde Placeholder",
+          "sans-serif"
+        ],
+        "fontWeight": 600
+      },
+      "h3": {
+        "fontFamily": "Open Runde",
+        "letterSpacing": "-0.84px",
+        "fontSize": "28px",
+        "lineHeight": "33.6px",
+        "fontFallbacks": [
+          "Open Runde",
+          "Open Runde Placeholder",
+          "sans-serif"
+        ],
+        "fontWeight": 500
+      },
+      "h4": {
+        "fontFamily": "Open Runde",
+        "letterSpacing": "-0.2px",
+        "fontSize": "20px",
+        "lineHeight": "28px",
+        "fontFallbacks": [
+          "Open Runde",
+          "Open Runde Placeholder",
+          "sans-serif"
+        ],
+        "fontWeight": 500
+      }
+    }
+  },
+  "components": {
+    "button": {
+      "secondary": {
+        "boxShadow": "none",
+        "padding": "12px 24px",
+        "backgroundColor": "transparent",
+        "borderColor": "#ffffff",
+        "css": "box-sizing: border-box; display: inline-block; min-width: 108px; min-height: 48px; background-color: transparent; color: #ffffff; border: 1px solid #ffffff; border-radius: 100px; padding: 12px 24px; font-size: 12px; font-weight: 400; font-family: sans-serif; text-decoration: none;",
+        "color": "#ffffff",
+        "minWidth": "108px",
+        "textDecoration": "none",
+        "fontFallbacks": [
+          "sans-serif"
+        ],
+        "minHeight": "48px",
+        "fontFamily": "sans-serif",
+        "borderRadius": "100px",
+        "borderWidth": "1px",
+        "fontSize": "12px",
+        "borderStyle": "solid",
+        "fontWeight": 400
+      },
+      "link": {
+        "boxShadow": "none",
+        "padding": "0px",
+        "backgroundColor": "transparent",
+        "borderColor": "transparent",
+        "css": "color: #60606c; font-size: 12px; font-weight: 500; font-family: sans-serif; text-decoration: none;",
+        "color": "#60606c",
+        "minWidth": "0px",
+        "textDecoration": "none",
+        "fontFallbacks": [
+          "sans-serif"
+        ],
+        "minHeight": "0px",
+        "fontFamily": "sans-serif",
+        "borderRadius": "0px",
+        "borderWidth": "0px",
+        "fontSize": "12px",
+        "borderStyle": "none",
+        "fontWeight": 500
+      },
+      "primary": {
+        "boxShadow": "none",
+        "padding": "12px 24px",
+        "backgroundColor": "#ffffff",
+        "borderColor": "#ffffff1a",
+        "css": "box-sizing: border-box; display: inline-block; min-width: 108px; min-height: 48px; background-color: #ffffff; color: #0000ee; border: 2px solid #ffffff1a; border-radius: 100px; padding: 12px 24px; font-size: 12px; font-weight: 400; font-family: sans-serif; text-decoration: none;",
+        "color": "#0000ee",
+        "minWidth": "108px",
+        "textDecoration": "none",
+        "fontFallbacks": [
+          "sans-serif"
+        ],
+        "minHeight": "48px",
+        "fontFamily": "sans-serif",
+        "borderRadius": "100px",
+        "borderWidth": "2px",
+        "fontSize": "12px",
+        "borderStyle": "solid",
+        "fontWeight": 400
+      }
+    },
+    "card": {
+      "boxShadow": "rgba(22, 106, 196, 0.01) 0px 0.421531px 0.421531px 0px, rgba(22, 106, 196, 0.04) 0px 1.60197px 1.60197px 0px, rgba(22, 106, 196, 0.17) 0px 7px 7px 0px",
+      "padding": "64px 28px 20px",
+      "backgroundColor": "#ffffff",
+      "borderColor": "#000000",
+      "css": "background-color: #ffffff; color: #000000; border: 0px none #000000; border-radius: 30px; padding: 64px 28px 20px; box-shadow: rgba(22, 106, 196, 0.01) 0px 0.421531px 0.421531px 0px, rgba(22, 106, 196, 0.04) 0px 1.60197px 1.60197px 0px, rgba(22, 106, 196, 0.17) 0px 7px 7px 0px;",
+      "borderRadius": "30px",
+      "borderWidth": "0px",
+      "borderStyle": "none",
+      "textColor": "#000000"
+    }
+  },
+  "elementSpacing": {
+    "xl": "56px",
+    "md": "24px",
+    "sm": "16px",
+    "lg": "36px",
+    "xs": "6px"
+  },
+  "shadows": {
+    "xl": "none",
+    "md": "none",
+    "sm": "rgba(22, 107, 197, 0.01) 0px 0.421531px 0.421531px 0px, rgba(22, 107, 197, 0.02) 0px 1.60197px 1.60197px 0px, rgba(22, 107, 197, 0.1) 0px 7px 7px 0px",
+    "lg": "none",
+    "inner": "none"
+  },
+  "fontLinks": {
+    "Open Runde": {
+      "displayName": "Open Runde",
+      "files": {
+        "400": "https://framerusercontent.com/assets/3exmuO07FP19gMM08TQrpXl3BGQ.woff2",
+        "500": "https://framerusercontent.com/assets/HJY4SY2JywrSZ2l1AEW9Tm9cO8.woff2",
+        "600": "https://framerusercontent.com/assets/hG3wmGmFwadB6X5XPVXkMlmLr8o.woff2"
+      },
+      "type": "custom"
+    }
+  },
+  "colors": {
+    "background": "#121212",
+    "text": "#ffffff",
+    "accent": "#ffffff"
+  }
+}

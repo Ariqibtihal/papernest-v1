@@ -1,0 +1,44 @@
+# ── Python ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Tooling ─────────────────────────────────────────────
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+# Catatan: uv.lock SENGAJA di-commit (reproducible builds, seperti package-lock.json)
+
+# ── Node / Frontend ─────────────────────────────────────
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+*.local
+
+# ── IDE ─────────────────────────────────────────────────
+.idea/
+.vscode/
+
+# ── OS ──────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Build ───────────────────────────────────────────────
+dist/
+build/
+
+# ── Logs ────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Streamlit ───────────────────────────────────────────
+.streamlit/secrets.toml

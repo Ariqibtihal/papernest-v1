@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1e6bb8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- ── Primary SEO ─────────────────────────────────────── -->
+    <title>PaperNest — Open scholarly search across 200M+ papers</title>
+    <meta
+      name="description"
+      content="Search, dedupe, and rank academic papers from Crossref, OpenAlex, arXiv, PubMed, Semantic Scholar, DOAJ, Europe PMC, and CORE. Quartile badges, open access filter, and free API."
+    />
+    <meta name="keywords" content="academic search, research papers, open access, journal quartile, Crossref, OpenAlex, arXiv, PubMed, literature review" />
+    <meta name="author" content="PaperNest" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://papernest.app/" />
+
+    <!-- ── Open Graph (Facebook, LinkedIn, Discord) ───────── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PaperNest" />
+    <meta property="og:title" content="PaperNest — Open scholarly search" />
+    <meta
+      property="og:description"
+      content="Multi-source academic paper search with quartile badges, deduplication, and open access filter. Free, no API keys required."
+    />
+    <meta property="og:url" content="https://papernest.app/" />
+    <meta property="og:image" content="https://papernest.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- ── Twitter Card ──────────────────────────────────── -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PaperNest — Open scholarly search" />
+    <meta
+      name="twitter:description"
+      content="Search 200M+ papers across 8 academic sources. Quartile badges, predator detection, free."
+    />
+    <meta name="twitter:image" content="https://papernest.app/og-image.png" />
+
+    <!-- ── JSON-LD structured data (helps Google understand the site) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "PaperNest",
+        "url": "https://papernest.app/",
+        "description": "Open scholarly search across 200M+ papers from Crossref, OpenAlex, arXiv, PubMed, Semantic Scholar, DOAJ, Europe PMC, and CORE.",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://papernest.app/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "PaperNest",
+        "url": "https://papernest.app/",
+        "logo": "https://papernest.app/og-image.png",
+        "sameAs": ["https://github.com/openalex"]
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div style="padding: 2rem; text-align: center; font-family: system-ui, sans-serif;">
+        <h1>PaperNest requires JavaScript</h1>
+        <p>This application is a single-page React app. Please enable JavaScript to continue.</p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

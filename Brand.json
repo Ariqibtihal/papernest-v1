@@ -1,0 +1,102 @@
+{
+  "status": "ok",
+  "brand": {
+    "domain": "letters.app",
+    "title": "Letters",
+    "description": "Letter's is an AI‑powered medical scribe and letter‑generation platform that enables clinicians to create personalized medical letters instantly. The tool produces gold‑standard transcriptions, automates documentation, and helps users save more than five hours of paperwork each week, delivering unlimited, high‑quality medical correspondence that sounds like the author.",
+    "slogan": "Write instant medical letters that sound like you.",
+    "colors": [
+      {
+        "hex": "#b1d8f4",
+        "name": "Blue Rice"
+      }
+    ],
+    "logos": [
+      {
+        "url": "https://media.brand.dev/758142e8-d353-4d7f-9f14-bc120e2282e0.svg",
+        "mode": "dark",
+        "colors": [
+          {
+            "hex": "#b1d8f4",
+            "name": "Blue Rice"
+          }
+        ],
+        "resolution": {
+          "width": 64,
+          "height": 64,
+          "aspect_ratio": 1
+        },
+        "type": "icon"
+      },
+      {
+        "url": "https://media.brand.dev/09ba4d3d-18ed-4e1c-9e65-1f50fae2e358.png",
+        "mode": "dark",
+        "colors": [
+          {
+            "hex": "#b1d9f7",
+            "name": "Endless Horizon"
+          }
+        ],
+        "resolution": {
+          "width": 512,
+          "height": 512,
+          "aspect_ratio": 1
+        },
+        "type": "icon"
+      }
+    ],
+    "backdrops": [
+      {
+        "url": "https://media.brand.dev/e53cce2e-1594-4b4e-be7f-3fa056de8881.png",
+        "colors": [
+          {
+            "hex": "#91b4d1",
+            "name": "Innocent Blue"
+          },
+          {
+            "hex": "#c9dceb",
+            "name": "Put on Ice"
+          },
+          {
+            "hex": "#f3f6f9",
+            "name": "White Solid"
+          }
+        ],
+        "resolution": {
+          "width": 1000,
+          "height": 525,
+          "aspect_ratio": 1.9
+        }
+      }
+    ],
+    "socials": [
+      {
+        "type": "x",
+        "url": "https://x.com/lettersapp"
+      }
+    ],
+    "is_nsfw": false,
+    "industries": {
+      "eic": [
+        {
+          "industry": "Healthcare",
+          "subindustry": "Digital Health & Telemedicine"
+        },
+        {
+          "industry": "Healthcare",
+          "subindustry": "Healthcare IT & EHR Systems"
+        }
+      ]
+    },
+    "links": {
+      "careers": null,
+      "terms": null,
+      "contact": null,
+      "privacy": null,
+      "blog": null,
+      "pricing": null
+    },
+    "primary_language": "english"
+  },
+  "code": 200
+}
