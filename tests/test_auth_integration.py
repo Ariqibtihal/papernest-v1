@@ -12,6 +12,10 @@ NOTE on database isolation:
 
 from __future__ import annotations
 
+import contextlib
+import os
+import tempfile
+
 import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
@@ -22,9 +26,17 @@ from app.db import session as db_session_module
 from app.db.base import Base
 from app.main import app
 
-# ── Shared in-memory DB for the whole module ──────────────────────────────────
+# ── Shared file-based test DB for the whole module ────────────────────────────
+#
+# We use a temp FILE (not :memory:) because in-memory SQLite connections are
+# bound to the event loop / connection that created them. Under pytest-asyncio
+# on Python 3.12, the module-scoped setup fixture and the individual tests can
+# run on different event loops, so tables created in an in-memory DB during
+# setup would be invisible to the tests. A file-based DB is shared reliably.
 
-_TEST_DB_URL = "sqlite+aiosqlite:///:memory:"
+_TEST_DB_FD, _TEST_DB_PATH = tempfile.mkstemp(suffix=".db", prefix="papernest_test_")
+os.close(_TEST_DB_FD)
+_TEST_DB_URL = f"sqlite+aiosqlite:///{_TEST_DB_PATH}"
 
 _test_engine = create_async_engine(
     _TEST_DB_URL,
@@ -53,6 +65,9 @@ async def setup_test_db():
     app.dependency_overrides.clear()
     async with _test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
+    await _test_engine.dispose()
+    with contextlib.suppress(OSError):
+        os.remove(_TEST_DB_PATH)
 
 
 client = TestClient(app)
