@@ -21,11 +21,8 @@ from __future__ import annotations
 import time
 from collections import defaultdict
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
-from typing import Optional
 
 from loguru import logger
-from schemas.paper import PaperDTO
 
 
 @dataclass

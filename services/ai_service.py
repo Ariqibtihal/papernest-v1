@@ -53,7 +53,7 @@ class AIService:
 
         prompt = (
             f'Rate the semantic relevance of each research paper to the query: "{query}"\n'
-            'Return a JSON object with a list of scores between 0 and 1, where 1 is highly relevant.\n'
+            "Return a JSON object with a list of scores between 0 and 1, where 1 is highly relevant.\n"
             'Format: {"scores": [0.9, 0.2, 0.5, ...]}\n'
             "Return ONLY the JSON.\n\n"
             f"Papers:\n{json.dumps(papers_data)}"

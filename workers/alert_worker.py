@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from loguru import logger
@@ -17,7 +17,9 @@ def start_scheduler() -> AsyncIOScheduler:
     global scheduler
     if scheduler is None:
         scheduler = AsyncIOScheduler()
-        scheduler.add_job(run_alerts, "interval", minutes=60, id="alert_checker", replace_existing=True)
+        scheduler.add_job(
+            run_alerts, "interval", minutes=60, id="alert_checker", replace_existing=True
+        )
         scheduler.start()
         logger.info("Alert scheduler started")
     return scheduler
@@ -58,7 +60,7 @@ async def _check_alert(session, alert: SearchAlert) -> None:
     papers, _latency, _total, _warnings = await SearchService().run(alert.query, filters, limit=10)
 
     # Always update last_run_at so we know the alert was processed
-    alert.last_run_at = datetime.now(timezone.utc).replace(tzinfo=None)  # naive UTC for SQLite
+    alert.last_run_at = datetime.now(UTC).replace(tzinfo=None)  # naive UTC for SQLite
     await session.commit()
 
     if papers:

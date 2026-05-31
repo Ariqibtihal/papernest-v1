@@ -4,7 +4,16 @@ from schemas.search import SearchFilters
 
 def test_registry_exposes_all_sources() -> None:
     registry = ConnectorRegistry()
-    assert registry.available_sources() == ["arxiv", "core", "crossref", "doaj", "europepmc", "openalex", "pubmed", "semantic_scholar"]
+    assert registry.available_sources() == [
+        "arxiv",
+        "core",
+        "crossref",
+        "doaj",
+        "europepmc",
+        "openalex",
+        "pubmed",
+        "semantic_scholar",
+    ]
 
 
 def test_registry_filters_requested_sources() -> None:

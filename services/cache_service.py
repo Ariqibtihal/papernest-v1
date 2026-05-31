@@ -55,6 +55,7 @@ class SearchCache:
         """Try to connect to Redis."""
         try:
             import redis.asyncio as redis
+
             from app.config import get_settings
 
             settings = get_settings()
@@ -71,7 +72,7 @@ class SearchCache:
                 socket_connect_timeout=5,
             )
             self._connected = True
-            logger.info(f"Connected to Redis for search cache")
+            logger.info("Connected to Redis for search cache")
 
         except ImportError:
             logger.info("redis package not installed, using in-memory cache")

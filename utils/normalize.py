@@ -8,7 +8,9 @@ def normalize_doi(doi: str | None) -> str | None:
     if not doi:
         return None
     value = doi.strip().lower()
-    value = value.removeprefix("https://doi.org/").removeprefix("http://doi.org/").removeprefix("doi:")
+    value = (
+        value.removeprefix("https://doi.org/").removeprefix("http://doi.org/").removeprefix("doi:")
+    )
     return value.strip() or None
 
 

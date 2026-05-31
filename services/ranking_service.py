@@ -5,10 +5,10 @@ from datetime import datetime
 
 from rapidfuzz import fuzz
 
-from schemas.paper import PaperDTO
-from services.journal_quality_service import JournalQualityService
 from data.journal_models import JournalQuartile
-from services.field_citations import FieldNormalizedCitations, AcademicField
+from schemas.paper import PaperDTO
+from services.field_citations import AcademicField, FieldNormalizedCitations
+from services.journal_quality_service import JournalQualityService
 
 
 class RankingService:
@@ -42,7 +42,10 @@ class RankingService:
     ) -> list[PaperDTO]:
         if semantic_scores is None:
             semantic_scores = [0.0] * len(papers)
-        return [cls.score_one(paper, query, s) for paper, s in zip(papers, semantic_scores)]
+        return [
+            cls.score_one(paper, query, s)
+            for paper, s in zip(papers, semantic_scores, strict=False)
+        ]
 
     @classmethod
     def score_one(cls, paper: PaperDTO, query: str, semantic_score: float = 0.0) -> PaperDTO:

@@ -6,7 +6,7 @@ import time
 from fastapi import APIRouter, Request
 from pydantic import BaseModel
 
-from app.core.rate_limit import limiter, RATE_LIMITS
+from app.core.rate_limit import RATE_LIMITS, limiter
 from connectors.registry import ConnectorRegistry
 from schemas.search import SearchRequest, SearchResponse
 from services.search_service import SearchService
@@ -52,10 +52,17 @@ async def sources_status() -> list[SourceStatus]:
         try:
             healthy = await connector.health_check()
             ms = int((time.perf_counter() - start) * 1000)
-            return SourceStatus(name=name, healthy=healthy, latency_ms=ms, requires_api_key=connector.requires_api_key)
+            return SourceStatus(
+                name=name,
+                healthy=healthy,
+                latency_ms=ms,
+                requires_api_key=connector.requires_api_key,
+            )
         except Exception:
             ms = int((time.perf_counter() - start) * 1000)
-            return SourceStatus(name=name, healthy=False, latency_ms=ms, requires_api_key=connector.requires_api_key)
+            return SourceStatus(
+                name=name, healthy=False, latency_ms=ms, requires_api_key=connector.requires_api_key
+            )
 
     tasks = [_check(name) for name in registry.available_sources()]
     results = await asyncio.gather(*tasks)

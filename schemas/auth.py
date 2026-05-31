@@ -12,35 +12,35 @@ class UserRegister(BaseModel):
     email: EmailStr
     password: str = Field(min_length=8, max_length=100)
     full_name: str | None = Field(default=None, max_length=255)
-    
-    @field_validator('password')
+
+    @field_validator("password")
     @classmethod
     def validate_password_strength(cls, v: str) -> str:
         """Ensure password meets security requirements."""
         if len(v) < 8:
-            raise ValueError('Password must be at least 8 characters')
-        if not re.search(r'[A-Z]', v):
-            raise ValueError('Password must contain at least one uppercase letter')
-        if not re.search(r'[a-z]', v):
-            raise ValueError('Password must contain at least one lowercase letter')
-        if not re.search(r'[0-9]', v):
-            raise ValueError('Password must contain at least one digit')
+            raise ValueError("Password must be at least 8 characters")
+        if not re.search(r"[A-Z]", v):
+            raise ValueError("Password must contain at least one uppercase letter")
+        if not re.search(r"[a-z]", v):
+            raise ValueError("Password must contain at least one lowercase letter")
+        if not re.search(r"[0-9]", v):
+            raise ValueError("Password must contain at least one digit")
         if not re.search(r'[!@#$%^&*(),.?":{}|<>]', v):
-            raise ValueError('Password must contain at least one special character')
+            raise ValueError("Password must contain at least one special character")
         return v
-    
-    @field_validator('full_name')
+
+    @field_validator("full_name")
     @classmethod
     def validate_full_name(cls, v: str | None) -> str | None:
         """Sanitize full name."""
         if v:
             # Remove any HTML tags
-            v = re.sub(r'<[^>]+>', '', v)
+            v = re.sub(r"<[^>]+>", "", v)
             # Remove excessive whitespace
-            v = ' '.join(v.split())
+            v = " ".join(v.split())
             # Prevent very long names
             if len(v) > 255:
-                raise ValueError('Full name is too long')
+                raise ValueError("Full name is too long")
         return v
 
 

@@ -24,7 +24,9 @@ class OpenAlexConnector(BaseConnector):
         self.headers = {"User-Agent": settings.user_agent}
         self.mailto = settings.contact_email
 
-    async def search(self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0) -> tuple[list[PaperDTO], int]:
+    async def search(
+        self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0
+    ) -> tuple[list[PaperDTO], int]:
         # OpenAlex uses 1-indexed pages
         page = (offset // limit) + 1
         params: dict[str, Any] = {
@@ -43,11 +45,11 @@ class OpenAlexConnector(BaseConnector):
         if filter_parts:
             params["filter"] = ",".join(filter_parts)
         data = await self._get_json(f"{self.base_url}/works", params=params, headers=self.headers)
-        
+
         meta = data.get("meta", {})
         total_results = meta.get("count", 0)
         items = data.get("results", [])
-        
+
         papers = [self.normalize(item) for item in items if item.get("title")]
         filtered_papers = [paper for paper in papers if filters.match(paper)]
         return filtered_papers, total_results
@@ -74,7 +76,11 @@ class OpenAlexConnector(BaseConnector):
         publication_date = self._parse_date(raw.get("publication_date"))
         abstract = self._abstract_from_inverted_index(raw.get("abstract_inverted_index"))
         authors = [self._normalize_author(authorship) for authorship in raw.get("authorships", [])]
-        topics = [concept.get("display_name") for concept in raw.get("concepts", []) if concept.get("display_name")]
+        topics = [
+            concept.get("display_name")
+            for concept in raw.get("concepts", [])
+            if concept.get("display_name")
+        ]
         landing_url = primary_location.get("landing_page_url") or ids.get("doi") or raw.get("id")
         oa_url = best_oa_location.get("pdf_url") or best_oa_location.get("landing_page_url")
         return PaperDTO(
@@ -99,7 +105,11 @@ class OpenAlexConnector(BaseConnector):
         )
 
     async def health_check(self) -> bool:
-        data = await self._get_json(f"{self.base_url}/works", params={"per-page": 1, "mailto": self.mailto}, headers=self.headers)
+        data = await self._get_json(
+            f"{self.base_url}/works",
+            params={"per-page": 1, "mailto": self.mailto},
+            headers=self.headers,
+        )
         return "results" in data
 
     @staticmethod

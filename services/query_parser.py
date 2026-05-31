@@ -30,9 +30,8 @@ Reference:
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
 
 
 class FieldType(Enum):
@@ -390,10 +389,7 @@ class QueryParser:
         year_from = int(match.group(1))
         year_to_str = match.group(2)
 
-        if year_to_str:
-            year_to = int(year_to_str)
-        else:
-            year_to = year_from
+        year_to = int(year_to_str) if year_to_str else year_from
 
         # Validate years
         if year_from < 1900 or year_from > 2100:

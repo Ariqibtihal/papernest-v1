@@ -21,14 +21,14 @@ class SearchFilters(BaseModel):
     institution: str | None = Field(default=None, max_length=200)
     type: str | None = None
 
-    @field_validator('year_from', 'year_to')
+    @field_validator("year_from", "year_to")
     @classmethod
     def validate_year_range(cls, v: int | None) -> int | None:
         if v is not None and (v < 1900 or v > 2100):
-            raise ValueError('Year must be between 1900 and 2100')
+            raise ValueError("Year must be between 1900 and 2100")
         return v
 
-    @field_validator('venue_contains', 'topic', 'institution')
+    @field_validator("venue_contains", "topic", "institution")
     @classmethod
     def sanitize_text_filter(cls, v: str | None) -> str | None:
         """
@@ -43,7 +43,7 @@ class SearchFilters(BaseModel):
              "gene deletion studies", "update on COVID vaccine".
         """
         if v:
-            v = re.sub(r'<[^>]+>', '', v)
+            v = re.sub(r"<[^>]+>", "", v)
             v = v.strip()
         return v
 
@@ -71,7 +71,12 @@ class SearchFilters(BaseModel):
             # Derived paper type logic for filtering
             paper_type = "other"
             venue_lower = (paper.venue or "").lower()
-            if "journal" in venue_lower or "conference" in venue_lower or paper.arxiv_id or paper.pubmed_id:
+            if (
+                "journal" in venue_lower
+                or "conference" in venue_lower
+                or paper.arxiv_id
+                or paper.pubmed_id
+            ):
                 paper_type = "article"
             elif "book" in venue_lower:
                 paper_type = "book-chapter"
@@ -88,8 +93,8 @@ class SearchRequest(BaseModel):
     limit: int = Field(default=25, ge=1, le=100)
     offset: int = Field(default=0, ge=0, le=10000)
     sort_by: Literal["relevance", "year_desc", "year_asc", "citations"] = "relevance"
-    
-    @field_validator('query')
+
+    @field_validator("query")
     @classmethod
     def validate_query(cls, v: str) -> str:
         """
@@ -101,10 +106,10 @@ class SearchRequest(BaseModel):
         prevented by SQLAlchemy parametrized queries; external API calls
         forward the query string as URL/JSON params, not raw SQL.
         """
-        v = re.sub(r'<[^>]+>', '', v)
+        v = re.sub(r"<[^>]+>", "", v)
         v = v.strip()
         if not v:
-            raise ValueError('Query cannot be empty after sanitization')
+            raise ValueError("Query cannot be empty after sanitization")
         return v
 
 

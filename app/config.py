@@ -49,34 +49,32 @@ class Settings(BaseSettings):
     jwt_secret_key: str = Field(
         default="change-this-secret-key-in-production",
         min_length=32,
-        description="JWT secret key (generate with: openssl rand -hex 32)"
+        description="JWT secret key (generate with: openssl rand -hex 32)",
     )
     jwt_algorithm: str = "HS256"
     access_token_expire_minutes: int = 15
     refresh_token_expire_days: int = 7
-    
+
     # CORS Configuration
     cors_origins: list[str] = Field(
         default=["http://localhost:5173", "http://localhost:3000", "http://localhost:8000"],
-        description="Allowed CORS origins"
+        description="Allowed CORS origins",
     )
     cors_allow_credentials: bool = True
     cors_allow_methods: list[str] = Field(
-        default=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        description="Allowed HTTP methods"
+        default=["GET", "POST", "PUT", "DELETE", "OPTIONS"], description="Allowed HTTP methods"
     )
     cors_allow_headers: list[str] = Field(
-        default=["Content-Type", "Authorization", "Accept"],
-        description="Allowed HTTP headers"
+        default=["Content-Type", "Authorization", "Accept"], description="Allowed HTTP headers"
     )
-    
-    @field_validator('jwt_secret_key')
+
+    @field_validator("jwt_secret_key")
     @classmethod
     def validate_jwt_secret(cls, v: str, info) -> str:
         """Validate JWT secret key is secure."""
         if v == "change-this-secret-key-in-production":
             # Only raise error in production
-            app_env = info.data.get('app_env', 'development')
+            app_env = info.data.get("app_env", "development")
             if app_env == "production":
                 raise ValueError(
                     "JWT_SECRET_KEY must be changed from default value in production. "
@@ -85,25 +83,24 @@ class Settings(BaseSettings):
         if len(v) < 32:
             raise ValueError("JWT_SECRET_KEY must be at least 32 characters")
         return v
-    
-    @field_validator('database_url')
+
+    @field_validator("database_url")
     @classmethod
     def validate_database_url(cls, v: str, info) -> str:
         """Validate database URL for production."""
-        app_env = info.data.get('app_env', 'development')
+        app_env = info.data.get("app_env", "development")
         if app_env == "production" and v.startswith("sqlite"):
             raise ValueError(
-                "SQLite is not recommended for production. "
-                "Use PostgreSQL: postgresql+asyncpg://..."
+                "SQLite is not recommended for production. Use PostgreSQL: postgresql+asyncpg://..."
             )
         return v
-    
-    @field_validator('cors_origins', mode='before')
+
+    @field_validator("cors_origins", mode="before")
     @classmethod
     def parse_cors_origins(cls, v):
         """Parse CORS origins from comma-separated string."""
         if isinstance(v, str):
-            return [origin.strip() for origin in v.split(',')]
+            return [origin.strip() for origin in v.split(",")]
         return v
 
 

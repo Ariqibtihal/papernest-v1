@@ -6,13 +6,11 @@ These tests validate the journal quality scoring and predatory detection.
 
 from __future__ import annotations
 
-import tempfile
 from pathlib import Path
-from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from data.journal_models import JournalQuartile, JournalRecord, JournalType
+from data.journal_models import JournalQuartile, JournalRecord
 from services.journal_quality_service import JournalQualityService
 
 

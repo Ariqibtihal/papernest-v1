@@ -44,9 +44,13 @@ if st.button("🔍 Search", type="primary") and query:
                 for paper in data["results"]:
                     with st.container(border=True):
                         st.subheader(paper["title"])
-                        st.caption(f"{paper.get('year') or '-'} · {paper.get('venue') or 'Unknown venue'}")
+                        st.caption(
+                            f"{paper.get('year') or '-'} · {paper.get('venue') or 'Unknown venue'}"
+                        )
         except httpx.ConnectError:
-            st.error("Backend belum berjalan. Jalankan: uv run uvicorn app.main:app --reload --port 8000")
+            st.error(
+                "Backend belum berjalan. Jalankan: uv run uvicorn app.main:app --reload --port 8000"
+            )
         except httpx.HTTPError as exc:
             st.error(f"Request gagal: {exc}")
 else:

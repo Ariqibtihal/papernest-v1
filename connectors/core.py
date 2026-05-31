@@ -26,14 +26,18 @@ class CoreConnector(BaseConnector):
         if key:
             self.headers["Authorization"] = f"Bearer {key}"
 
-    async def search(self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0) -> tuple[list[PaperDTO], int]:
+    async def search(
+        self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0
+    ) -> tuple[list[PaperDTO], int]:
         params: dict[str, Any] = {
             "q": query,
             "limit": limit,
             "offset": offset,
         }
-        data = await self._get_json(f"{self.base_url}/search/works", params=params, headers=self.headers)
-        
+        data = await self._get_json(
+            f"{self.base_url}/search/works", params=params, headers=self.headers
+        )
+
         total_hits = data.get("totalHits", 0)
         items = data.get("results", [])
         papers = [paper for item in items if (paper := self.normalize(item)) is not None]
@@ -45,7 +49,9 @@ class CoreConnector(BaseConnector):
         if not normalized:
             return None
         params: dict[str, Any] = {"q": f'doi:"{normalized}"', "limit": 1, "offset": 0}
-        data = await self._get_json(f"{self.base_url}/search/works", params=params, headers=self.headers)
+        data = await self._get_json(
+            f"{self.base_url}/search/works", params=params, headers=self.headers
+        )
         items = data.get("results", [])
         if not items:
             return None
@@ -73,7 +79,9 @@ class CoreConnector(BaseConnector):
         publication_date = date(year, 1, 1) if year else None
         doi = self._extract_doi(raw)
         oa_url = self._extract_oa_url(raw)
-        landing_url = raw.get("downloadUrl") or raw.get("url") or raw.get("sourceFulltextUrls", [None])[0]
+        landing_url = (
+            raw.get("downloadUrl") or raw.get("url") or raw.get("sourceFulltextUrls", [None])[0]
+        )
 
         topics: list[str] = []
         for field in ("topics", "subjects", "fieldOfStudy", "keywords"):
@@ -139,7 +147,11 @@ class CoreConnector(BaseConnector):
                 else:
                     value = item.get("identifier") or item.get("value") or item.get("id")
                     item_type = str(item.get("type") or "").lower()
-                    doi = normalize_doi(value) if item_type == "doi" or "doi" in str(value).lower() else None
+                    doi = (
+                        normalize_doi(value)
+                        if item_type == "doi" or "doi" in str(value).lower()
+                        else None
+                    )
                 if doi:
                     return doi
         return None

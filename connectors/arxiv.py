@@ -27,7 +27,9 @@ class ArxivConnector(BaseConnector):
         settings = get_settings()
         self.headers = {"User-Agent": settings.user_agent}
 
-    async def search(self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0) -> tuple[list[PaperDTO], int]:
+    async def search(
+        self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0
+    ) -> tuple[list[PaperDTO], int]:
         params: dict[str, Any] = {
             "search_query": f"all:{query}",
             "start": offset,
@@ -36,7 +38,7 @@ class ArxivConnector(BaseConnector):
             "sortOrder": "descending",
         }
         data = await self._get_xml(f"{self.base_url}/query", params=params, headers=self.headers)
-        
+
         # Parse total results
         opensearch = "{http://a9.com/-/spec/opensearch/1.1/}"
         total_el = data.find(f"{opensearch}totalResults")
@@ -111,9 +113,7 @@ class ArxivConnector(BaseConnector):
             if href:
                 if title_attr.lower() == "pdf" or mime == "application/pdf":
                     pdf_url = href
-                elif rel == "alternate" and not landing_url:
-                    landing_url = href
-                elif not landing_url and not rel:
+                elif rel == "alternate" and not landing_url or not landing_url and not rel:
                     landing_url = href
         if not landing_url and entry_id:
             landing_url = entry_id
@@ -148,13 +148,15 @@ class ArxivConnector(BaseConnector):
             oa_url=pdf_url,
             landing_url=landing_url,
             topics=categories,
-            raw=raw if isinstance(raw, dict) else {}
+            raw=raw if isinstance(raw, dict) else {},
         )
 
     async def health_check(self) -> bool:
         params: dict[str, Any] = {"search_query": "all:machine+learning", "max_results": 1}
         try:
-            data = await self._get_xml(f"{self.base_url}/query", params=params, headers=self.headers)
+            data = await self._get_xml(
+                f"{self.base_url}/query", params=params, headers=self.headers
+            )
             entries = data.findall(f".{self._ATOM}entry")
             return len(entries) > 0
         except Exception:

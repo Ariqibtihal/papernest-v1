@@ -28,7 +28,9 @@ class PubmedConnector(BaseConnector):
     # ------------------------------------------------------------------
     # Search
     # ------------------------------------------------------------------
-    async def search(self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0) -> tuple[list[PaperDTO], int]:
+    async def search(
+        self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0
+    ) -> tuple[list[PaperDTO], int]:
         # 1. esearch -> PMIDs
         search_params: dict[str, Any] = {
             "db": "pubmed",
@@ -40,7 +42,9 @@ class PubmedConnector(BaseConnector):
         if self.api_key:
             search_params["api_key"] = self.api_key
 
-        search_data = await self._get_json(f"{self.base_url}/esearch.fcgi", params=search_params, headers=self.headers)
+        search_data = await self._get_json(
+            f"{self.base_url}/esearch.fcgi", params=search_params, headers=self.headers
+        )
         esearch_result = search_data.get("esearchresult", {})
         total_results = int(esearch_result.get("count", 0))
         pmids = esearch_result.get("idlist", [])
@@ -57,7 +61,9 @@ class PubmedConnector(BaseConnector):
         if self.api_key:
             fetch_params["api_key"] = self.api_key
 
-        xml_text = await self._get_text(f"{self.base_url}/efetch.fcgi", params=fetch_params, headers=self.headers)
+        xml_text = await self._get_text(
+            f"{self.base_url}/efetch.fcgi", params=fetch_params, headers=self.headers
+        )
         root = ET.fromstring(xml_text)
         self._strip_ns(root)
 
@@ -86,7 +92,9 @@ class PubmedConnector(BaseConnector):
         if self.api_key:
             search_params["api_key"] = self.api_key
 
-        search_data = await self._get_json(f"{self.base_url}/esearch.fcgi", params=search_params, headers=self.headers)
+        search_data = await self._get_json(
+            f"{self.base_url}/esearch.fcgi", params=search_params, headers=self.headers
+        )
         pmids = search_data.get("esearchresult", {}).get("idlist", [])
         if not pmids:
             return None
@@ -100,7 +108,9 @@ class PubmedConnector(BaseConnector):
         if self.api_key:
             fetch_params["api_key"] = self.api_key
 
-        xml_text = await self._get_text(f"{self.base_url}/efetch.fcgi", params=fetch_params, headers=self.headers)
+        xml_text = await self._get_text(
+            f"{self.base_url}/efetch.fcgi", params=fetch_params, headers=self.headers
+        )
         root = ET.fromstring(xml_text)
         self._strip_ns(root)
 
@@ -166,10 +176,12 @@ class PubmedConnector(BaseConnector):
                         name = last.text.strip()
                 else:
                     continue
-                authors.append(AuthorDTO(
-                    name=name,
-                    affiliation=aff.text.strip() if aff is not None and aff.text else None,
-                ))
+                authors.append(
+                    AuthorDTO(
+                        name=name,
+                        affiliation=aff.text.strip() if aff is not None and aff.text else None,
+                    )
+                )
 
         # Year / Date
         year: int | None = None
@@ -280,11 +292,18 @@ class PubmedConnector(BaseConnector):
     # Health check
     # ------------------------------------------------------------------
     async def health_check(self) -> bool:
-        params: dict[str, Any] = {"db": "pubmed", "term": "machine learning", "retmax": 1, "retmode": "json"}
+        params: dict[str, Any] = {
+            "db": "pubmed",
+            "term": "machine learning",
+            "retmax": 1,
+            "retmode": "json",
+        }
         if self.api_key:
             params["api_key"] = self.api_key
         try:
-            data = await self._get_json(f"{self.base_url}/esearch.fcgi", params=params, headers=self.headers)
+            data = await self._get_json(
+                f"{self.base_url}/esearch.fcgi", params=params, headers=self.headers
+            )
             return "esearchresult" in data
         except Exception:
             return False
@@ -310,17 +329,29 @@ class PubmedConnector(BaseConnector):
     @staticmethod
     def _parse_month(value: str) -> int:
         months = {
-            "jan": 1, "january": 1,
-            "feb": 2, "february": 2,
-            "mar": 3, "march": 3,
-            "apr": 4, "april": 4,
+            "jan": 1,
+            "january": 1,
+            "feb": 2,
+            "february": 2,
+            "mar": 3,
+            "march": 3,
+            "apr": 4,
+            "april": 4,
             "may": 5,
-            "jun": 6, "june": 6,
-            "jul": 7, "july": 7,
-            "aug": 8, "august": 8,
-            "sep": 9, "september": 9, "sept": 9,
-            "oct": 10, "october": 10,
-            "nov": 11, "november": 11,
-            "dec": 12, "december": 12,
+            "jun": 6,
+            "june": 6,
+            "jul": 7,
+            "july": 7,
+            "aug": 8,
+            "august": 8,
+            "sep": 9,
+            "september": 9,
+            "sept": 9,
+            "oct": 10,
+            "october": 10,
+            "nov": 11,
+            "november": 11,
+            "dec": 12,
+            "december": 12,
         }
         return months.get(value.lower(), 1)

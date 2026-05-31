@@ -6,9 +6,7 @@ These tests validate the spell checking functionality.
 
 from __future__ import annotations
 
-import pytest
-
-from services.spell_checker import SpellChecker, get_spell_checker, check_spelling
+from services.spell_checker import SpellChecker, check_spelling, get_spell_checker
 
 
 class TestSpellChecker:

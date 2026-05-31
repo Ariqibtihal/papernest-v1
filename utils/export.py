@@ -30,18 +30,18 @@ def export_bibtex(papers: list[PaperDTO]) -> str:
     for paper in papers:
         key = _bibtex_key(paper)
         entry = [f"@article{{{key},"]
-        entry.append(f'  title = {{{paper.title}}},')
-        entry.append(f'  author = {{{_bibtex_authors(paper)}}},')
+        entry.append(f"  title = {{{paper.title}}},")
+        entry.append(f"  author = {{{_bibtex_authors(paper)}}},")
         if paper.venue:
-            entry.append(f'  journal = {{{paper.venue}}},')
+            entry.append(f"  journal = {{{paper.venue}}},")
         if paper.year:
-            entry.append(f'  year = {{{paper.year}}},')
+            entry.append(f"  year = {{{paper.year}}},")
         if paper.doi:
-            entry.append(f'  doi = {{{paper.doi}}},')
+            entry.append(f"  doi = {{{paper.doi}}},")
         if paper.oa_url:
-            entry.append(f'  url = {{{paper.oa_url}}},')
+            entry.append(f"  url = {{{paper.oa_url}}},")
         if paper.abstract:
-            entry.append(f'  abstract = {{{paper.abstract}}},')
+            entry.append(f"  abstract = {{{paper.abstract}}},")
         entry.append("}")
         lines.append("\n".join(entry))
     return "\n\n".join(lines)
@@ -50,25 +50,39 @@ def export_bibtex(papers: list[PaperDTO]) -> str:
 def export_csv(papers: list[PaperDTO]) -> str:
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow([
-        "title", "authors", "year", "venue", "doi", "citation_count",
-        "is_open_access", "abstract", "topics", "source", "landing_url", "oa_url",
-    ])
+    writer.writerow(
+        [
+            "title",
+            "authors",
+            "year",
+            "venue",
+            "doi",
+            "citation_count",
+            "is_open_access",
+            "abstract",
+            "topics",
+            "source",
+            "landing_url",
+            "oa_url",
+        ]
+    )
     for paper in papers:
-        writer.writerow([
-            paper.title,
-            "; ".join(a.name for a in paper.authors),
-            paper.year,
-            paper.venue,
-            paper.doi,
-            paper.citation_count,
-            paper.is_open_access,
-            paper.abstract,
-            ", ".join(paper.topics),
-            ", ".join(paper.sources),
-            paper.landing_url,
-            paper.oa_url,
-        ])
+        writer.writerow(
+            [
+                paper.title,
+                "; ".join(a.name for a in paper.authors),
+                paper.year,
+                paper.venue,
+                paper.doi,
+                paper.citation_count,
+                paper.is_open_access,
+                paper.abstract,
+                ", ".join(paper.topics),
+                ", ".join(paper.sources),
+                paper.landing_url,
+                paper.oa_url,
+            ]
+        )
     return output.getvalue()
 
 

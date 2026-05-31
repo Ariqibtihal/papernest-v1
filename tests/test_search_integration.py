@@ -4,6 +4,7 @@ Integration tests for the search flow.
 Uses monkeypatching to avoid real external API calls while still exercising
 the full request → service → response pipeline.
 """
+
 from __future__ import annotations
 
 import pytest
@@ -17,6 +18,7 @@ from services.search_service import SearchService
 client = TestClient(app)
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
+
 
 def _make_paper(title: str, year: int = 2023, source: str = "crossref") -> PaperDTO:
     return PaperDTO(
@@ -40,7 +42,7 @@ def mock_search(monkeypatch):
     ]
 
     async def fake_run(self, query, filters, limit=25, offset=0, sort_by="relevance"):
-        page = papers[offset: offset + limit]
+        page = papers[offset : offset + limit]
         return page, 42, 3, []
 
     monkeypatch.setattr(SearchService, "run", fake_run)
@@ -48,6 +50,7 @@ def mock_search(monkeypatch):
 
 
 # ── Basic search ──────────────────────────────────────────────────────────────
+
 
 class TestSearchEndpoint:
     def test_search_returns_200(self, mock_search):
@@ -107,6 +110,7 @@ class TestSearchEndpoint:
 
 # ── Input validation ──────────────────────────────────────────────────────────
 
+
 class TestSearchValidation:
     def test_empty_query_rejected(self):
         resp = client.post(
@@ -153,6 +157,7 @@ class TestSearchValidation:
 
 # ── Sort options ──────────────────────────────────────────────────────────────
 
+
 class TestSearchSortOptions:
     @pytest.mark.parametrize("sort_by", ["relevance", "year_desc", "year_asc", "citations"])
     def test_valid_sort_options_accepted(self, mock_search, sort_by):
@@ -164,6 +169,7 @@ class TestSearchSortOptions:
 
 
 # ── Sources status ────────────────────────────────────────────────────────────
+
 
 class TestSourcesStatus:
     def test_sources_status_returns_list(self):

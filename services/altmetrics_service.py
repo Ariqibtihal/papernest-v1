@@ -20,10 +20,8 @@ Free tier available with rate limits.
 
 from __future__ import annotations
 
-import asyncio
 import time
 from dataclasses import dataclass, field
-from typing import Optional
 
 import httpx
 from loguru import logger
@@ -210,7 +208,7 @@ class AltmetricsService:
         sources = {}
         for source_name in ["twitter", "facebook", "blogs", "news", "reddit", "wikipedia"]:
             count = (
-                data.get(f"mendeley", 0) if source_name == "mendeley" else data.get(source_name, 0)
+                data.get("mendeley", 0) if source_name == "mendeley" else data.get(source_name, 0)
             )
             if count:
                 sources[source_name] = count

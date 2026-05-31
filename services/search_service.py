@@ -11,12 +11,12 @@ from connectors.base import BaseConnector
 from connectors.registry import ConnectorRegistry
 from schemas.paper import PaperDTO
 from schemas.search import SearchFilters
-from services.dedup_service import get_dedup_service
-from services.ranking_service import RankingService
 from services.ai_service import AIService
 from services.cache_service import get_search_cache
-from services.query_parser import ParsedQuery, QueryParser, YearRange, FieldType
-from services.spell_checker import get_spell_checker, CorrectionResult
+from services.dedup_service import get_dedup_service
+from services.query_parser import FieldType, ParsedQuery, QueryParser, YearRange
+from services.ranking_service import RankingService
+from services.spell_checker import get_spell_checker
 
 SortOption = Literal["relevance", "year_desc", "year_asc", "citations"]
 
@@ -66,9 +66,7 @@ def _build_connector_query(parsed: ParsedQuery) -> str:
         elif term.field == FieldType.AUTHOR:
             # Some APIs support author: prefix
             parts.append(f"author:{term.value}")
-        elif term.field == FieldType.ABSTRACT:
-            parts.append(f'"{term.value}"')
-        elif term.field == FieldType.VENUE:
+        elif term.field == FieldType.ABSTRACT or term.field == FieldType.VENUE:
             parts.append(f'"{term.value}"')
         else:
             parts.append(term.value)

@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import httpx
 
-from app.config import get_settings
-from connectors.base import BaseConnector
 from connectors.arxiv import ArxivConnector
+from connectors.base import BaseConnector
 from connectors.core import CoreConnector
 from connectors.crossref import CrossrefConnector
 from connectors.doaj import DoajConnector
@@ -17,7 +16,6 @@ from schemas.search import SearchFilters
 
 class ConnectorRegistry:
     def __init__(self, http_client: httpx.AsyncClient | None = None):
-        settings = get_settings()
         self._connectors: dict[str, BaseConnector] = {
             "crossref": CrossrefConnector(http_client=http_client),
             "core": CoreConnector(http_client=http_client),

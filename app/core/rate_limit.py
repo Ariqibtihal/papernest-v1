@@ -27,7 +27,7 @@ def _rate_limit_key(request: Request) -> str:
 # Create limiter — authenticated routes use _rate_limit_key (user-aware),
 # public routes (register, login, search) still use IP via get_remote_address.
 limiter = Limiter(
-    key_func=get_remote_address,   # default for public endpoints
+    key_func=get_remote_address,  # default for public endpoints
     default_limits=["100/hour"],
 )
 

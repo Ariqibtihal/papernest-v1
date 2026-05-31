@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -16,8 +17,8 @@ from app.api.routes_export import router as export_router
 from app.api.routes_saved import router as saved_router
 from app.api.routes_search import router as search_router
 from app.config import get_settings
-from app.core.logging import setup_logging
 from app.core.http import HTTPClientManager
+from app.core.logging import setup_logging
 from app.core.rate_limit import limiter, user_limiter
 from app.core.security_headers import SecurityHeadersMiddleware
 from app.db.session import init_db
@@ -120,8 +121,6 @@ app.include_router(alert_router, prefix="/api/v1", tags=["alerts"])
 # StaticFiles(html=True) sudah menangani SPA fallback: kalau path tidak
 # match file, akan fallback ke index.html. Tidak perlu route handler
 # tambahan (yang malah tidak akan kepanggil karena Mount catch dulu).
-import os
-
 static_dir = os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
 if os.path.isdir(static_dir):
     app.mount("/", StaticFiles(directory=static_dir, html=True), name="static")

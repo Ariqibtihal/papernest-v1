@@ -23,13 +23,15 @@ class EuropePmcConnector(BaseConnector):
         settings = get_settings()
         self.headers = {"User-Agent": settings.user_agent}
 
-    async def search(self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0) -> tuple[list[PaperDTO], int]:
+    async def search(
+        self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0
+    ) -> tuple[list[PaperDTO], int]:
         # EuropePMC uses cursorMark for pagination, which is token-based.
         # For simplicity, we only return the first page if offset == 0, else empty if we can't use offset easily.
         # But we still return total.
         if offset > 0:
             return [], 0
-            
+
         params: dict[str, Any] = {
             "query": query,
             "pageSize": limit,
@@ -125,7 +127,9 @@ class EuropePmcConnector(BaseConnector):
             "resultType": "lite",
         }
         try:
-            data = await self._get_json(f"{self.base_url}/search", params=params, headers=self.headers)
+            data = await self._get_json(
+                f"{self.base_url}/search", params=params, headers=self.headers
+            )
             return "resultList" in data
         except Exception:
             return False

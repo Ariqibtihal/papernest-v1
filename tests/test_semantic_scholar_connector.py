@@ -15,7 +15,10 @@ MINIMAL_SS_RESPONSE = {
     "isOpenAccess": True,
     "openAccessPdf": {"url": "https://pdf.example.com/paper.pdf", "status": "GREEN"},
     "fieldsOfStudy": ["Computer Science", "Machine Learning"],
-    "authors": [{"name": "Alice Researcher", "authorId": "a1"}, {"name": "Bob Scientist", "authorId": "b2"}],
+    "authors": [
+        {"name": "Alice Researcher", "authorId": "a1"},
+        {"name": "Bob Scientist", "authorId": "b2"},
+    ],
     "url": "https://semanticscholar.org/paper/abc123",
     "journal": {"name": "Example Journal", "publisher": "Example Publisher"},
 }

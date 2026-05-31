@@ -24,6 +24,7 @@ target_metadata = Base.metadata
 
 # Get database URL from environment
 from app.config import get_settings
+
 settings = get_settings()
 config.set_main_option("sqlalchemy.url", settings.database_url)
 

@@ -9,17 +9,18 @@ NOTE on database isolation:
   all requests within a test share the same connection and can see each other's
   committed data (token revocations, etc.).
 """
+
 from __future__ import annotations
 
 import pytest
 from fastapi import status
 from fastapi.testclient import TestClient
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import StaticPool
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 
-from app.main import app
 from app.db import session as db_session_module
 from app.db.base import Base
+from app.main import app
 
 # ── Shared in-memory DB for the whole module ──────────────────────────────────
 
@@ -30,9 +31,7 @@ _test_engine = create_async_engine(
     connect_args={"check_same_thread": False},
     poolclass=StaticPool,
 )
-_TestSessionLocal = async_sessionmaker(
-    _test_engine, expire_on_commit=False, class_=AsyncSession
-)
+_TestSessionLocal = async_sessionmaker(_test_engine, expire_on_commit=False, class_=AsyncSession)
 
 
 async def _override_get_session():
@@ -44,7 +43,7 @@ async def _override_get_session():
 async def setup_test_db():
     """Create all tables once for the module, then drop them after."""
     # Import models so metadata is populated
-    from models import user, saved_paper, search_alert, paper  # noqa: F401
+    from models import paper, saved_paper, search_alert, user  # noqa: F401
 
     async with _test_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -87,6 +86,7 @@ def tokens(registered_user) -> dict:
 
 # ── Register ──────────────────────────────────────────────────────────────────
 
+
 class TestRegister:
     def test_register_success(self):
         resp = client.post(
@@ -123,6 +123,7 @@ class TestRegister:
 
 # ── Login ─────────────────────────────────────────────────────────────────────
 
+
 class TestLogin:
     def test_login_success_returns_tokens(self, registered_user):
         resp = client.post(
@@ -153,6 +154,7 @@ class TestLogin:
 
 # ── Protected route ───────────────────────────────────────────────────────────
 
+
 class TestProtectedRoute:
     def test_get_me_with_valid_token(self, tokens):
         resp = client.get(
@@ -177,6 +179,7 @@ class TestProtectedRoute:
 
 
 # ── Refresh token rotation ────────────────────────────────────────────────────
+
 
 class TestRefreshTokenRotation:
     def test_refresh_returns_new_token_pair(self, tokens):
@@ -217,6 +220,7 @@ class TestRefreshTokenRotation:
         by checking the DB state directly via the service layer.
         """
         import asyncio
+
         from services.auth_service import validate_refresh_token
 
         old_refresh = tokens["refresh_token"]
@@ -231,6 +235,7 @@ class TestRefreshTokenRotation:
         # Verify the old session is marked revoked in the DB
         async def check_revoked():
             from app.db.session import SessionLocal
+
             async with SessionLocal() as session:
                 result = await validate_refresh_token(session, old_refresh, 2)
                 return result
@@ -249,9 +254,11 @@ class TestRefreshTokenRotation:
 
 # ── Logout ────────────────────────────────────────────────────────────────────
 
+
 class TestLogout:
     def test_logout_revokes_refresh_token(self, tokens):
         import asyncio
+
         from services.auth_service import validate_refresh_token
 
         access = tokens["access_token"]
@@ -268,6 +275,7 @@ class TestLogout:
         # Verify the session is revoked in the DB directly
         async def check_revoked():
             from app.db.session import SessionLocal
+
             async with SessionLocal() as session:
                 return await validate_refresh_token(session, refresh, tokens.get("user_id", 2))
 

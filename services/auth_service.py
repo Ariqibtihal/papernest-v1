@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import secrets
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from fastapi import HTTPException, status
@@ -29,7 +29,7 @@ _DUMMY_BCRYPT_HASH = hash_password(secrets.token_urlsafe(32))
 
 def _now() -> datetime:
     """Return current UTC time as timezone-aware datetime. Single source of truth."""
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def _make_naive(dt: datetime) -> datetime:
@@ -128,43 +128,45 @@ async def authenticate_user(
         logger.warning(f"Account locked: {email}, remaining: {remaining} minutes")
         raise HTTPException(
             status_code=status.HTTP_423_LOCKED,
-            detail=f"Account locked due to too many failed login attempts. Try again in {remaining} minutes."
+            detail=f"Account locked due to too many failed login attempts. Try again in {remaining} minutes.",
         )
-    
+
     # Reset lock if expired
     if user.locked_until and user.locked_until <= now_naive:
         user.locked_until = None
         user.failed_login_attempts = 0
         logger.info(f"Account lock expired and reset: {email}")
-    
+
     if not user.is_active:
         logger.debug(f"User account is inactive: {email}")
         return None
-    
+
     # Verify password
     if not verify_password(password, user.password_hash):
         # Increment failed attempts
         user.failed_login_attempts += 1
-        
+
         if user.failed_login_attempts >= MAX_FAILED_ATTEMPTS:
             user.locked_until = now_naive + timedelta(minutes=LOCKOUT_DURATION_MINUTES)
             await session.commit()
             logger.warning(f"Account locked after {MAX_FAILED_ATTEMPTS} failed attempts: {email}")
             raise HTTPException(
                 status_code=status.HTTP_423_LOCKED,
-                detail=f"Account locked for {LOCKOUT_DURATION_MINUTES} minutes due to too many failed login attempts."
+                detail=f"Account locked for {LOCKOUT_DURATION_MINUTES} minutes due to too many failed login attempts.",
             )
-        
+
         await session.commit()
-        logger.debug(f"Invalid password for user: {email}, attempts: {user.failed_login_attempts}/{MAX_FAILED_ATTEMPTS}")
+        logger.debug(
+            f"Invalid password for user: {email}, attempts: {user.failed_login_attempts}/{MAX_FAILED_ATTEMPTS}"
+        )
         return None
-    
+
     # Successful login - reset failed attempts
     user.failed_login_attempts = 0
     user.locked_until = None
     user.last_login = now_naive
     await session.commit()
-    
+
     logger.info(f"User authenticated successfully: {email}")
     return user
 
@@ -177,10 +179,10 @@ async def create_user_session(
     """Create a new user session with refresh token."""
     # Hash the refresh token for storage
     refresh_token_hash = hash_password(refresh_token)
-    
+
     now_naive = _make_naive(_now())
     expires_at = now_naive + timedelta(days=settings.refresh_token_expire_days)
-    
+
     user_session = UserSession(
         user_id=user_id,
         refresh_token_hash=refresh_token_hash,
@@ -189,7 +191,7 @@ async def create_user_session(
     session.add(user_session)
     await session.commit()
     await session.refresh(user_session)
-    
+
     return user_session
 
 
@@ -219,13 +221,13 @@ async def validate_refresh_token(
 async def revoke_refresh_token(session: AsyncSession, user_id: int, refresh_token: str) -> bool:
     """Revoke a refresh token."""
     user_session = await validate_refresh_token(session, refresh_token, user_id)
-    
+
     if user_session:
         user_session.revoked = True
         await session.commit()
         logger.info(f"Revoked refresh token for user {user_id}")
         return True
-    
+
     return False
 
 

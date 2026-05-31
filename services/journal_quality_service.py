@@ -33,17 +33,14 @@ from __future__ import annotations
 import csv
 import re
 import unicodedata
-from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
 
 from loguru import logger
 
 from data.journal_models import (
+    JournalQualityStats,
     JournalQuartile,
     JournalRecord,
-    JournalType,
-    JournalQualityStats,
     PredatoryJournalCriteria,
 )
 
@@ -157,7 +154,7 @@ class JournalQualityService:
         count = 0
 
         # Scimago CSV uses semicolon separator
-        with open(path, "r", encoding="utf-8-sig") as f:
+        with open(path, encoding="utf-8-sig") as f:
             reader = csv.DictReader(f, delimiter=";")
 
             for row in reader:
@@ -205,16 +202,6 @@ class JournalQualityService:
 
         # Extract country
         country = row.get("Country", "").strip()
-
-        # Extract type
-        type_str = row.get("Type", "").strip().lower()
-        journal_type = JournalType.UNKNOWN
-        if "journal" in type_str:
-            journal_type = JournalType.JOURNAL
-        elif "book" in type_str:
-            journal_type = JournalType.BOOK_SERIES
-        elif "trade" in type_str:
-            journal_type = JournalType.TRADE_JOURNAL
 
         # Extract metrics
         sjr = self._parse_float(row.get("SJR", "0"))

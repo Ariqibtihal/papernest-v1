@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Request
-from sqlalchemy import select, func
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import CurrentUser
-from app.core.rate_limit import user_limiter, RATE_LIMITS
+from app.core.rate_limit import RATE_LIMITS, user_limiter
 from app.db.session import get_async_session
 from models.saved_paper import SavedPaper
 from schemas.saved_paper import SavedPaperCreate, SavedPaperList, SavedPaperOut

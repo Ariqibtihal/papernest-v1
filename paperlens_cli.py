@@ -20,6 +20,7 @@ ketik `paperlens dev` untuk langsung jalan — sama seperti `9router`.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import os
 import shutil
 import signal
@@ -34,10 +35,8 @@ from pathlib import Path
 # akan UnicodeEncodeError. reconfigure() di Python 3.7+ aman dipanggil.
 # ────────────────────────────────────────────────────────────
 for _stream in (sys.stdout, sys.stderr):
-    try:
+    with contextlib.suppress(AttributeError, OSError):
         _stream.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
-    except (AttributeError, OSError):
-        pass
 
 # ────────────────────────────────────────────────────────────
 # Path & helper
@@ -120,7 +119,9 @@ def ensure_uv() -> None:
     print()
     print("Install uv terlebih dahulu:")
     if IS_WINDOWS:
-        print('  powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"')
+        print(
+            '  powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"'
+        )
     else:
         print("  curl -LsSf https://astral.sh/uv/install.sh | sh")
     print()
@@ -146,7 +147,7 @@ def ensure_env() -> None:
         warn(".env.example tidak ditemukan, lewati auto-create .env")
         return
     shutil.copy(ENV_EXAMPLE, ENV_FILE)
-    ok(f".env dibuat dari .env.example — edit untuk isi CONTACT_EMAIL, dst.")
+    ok(".env dibuat dari .env.example — edit untuk isi CONTACT_EMAIL, dst.")
 
 
 def frontend_installed() -> bool:
@@ -396,11 +397,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
     )
 
     # Cek dep penting di venv (loguru sering jadi sinyal pertama deps belum ter-sync).
-    venv_python = (
-        venv_dir / "Scripts" / "python.exe"
-        if IS_WINDOWS
-        else venv_dir / "bin" / "python"
-    )
+    venv_python = venv_dir / "Scripts" / "python.exe" if IS_WINDOWS else venv_dir / "bin" / "python"
     deps_ok = False
     if venv_exists and venv_python.is_file():
         rc = subprocess.run(
@@ -423,9 +420,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
     if uvicorn_path:
         uv_p = Path(uvicorn_path).resolve()
         venv_uv = (
-            venv_dir / "Scripts" / "uvicorn.exe"
-            if IS_WINDOWS
-            else venv_dir / "bin" / "uvicorn"
+            venv_dir / "Scripts" / "uvicorn.exe" if IS_WINDOWS else venv_dir / "bin" / "uvicorn"
         )
         is_venv_uvicorn = venv_uv.is_file() and uv_p == venv_uv.resolve()
         if not is_venv_uvicorn:

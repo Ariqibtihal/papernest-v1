@@ -17,12 +17,9 @@ The service handles:
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
-from typing import Optional
 
-from schemas.paper import PaperDTO, AuthorDTO
+from schemas.paper import AuthorDTO, PaperDTO
 from utils.normalize import normalize_arxiv_id, normalize_doi, normalize_title
-
 
 # ── Blocking key helpers ──────────────────────────────────────────────────────
 
@@ -192,12 +189,11 @@ class DedupService:
                         # Merge if:
                         # 1. High title similarity (>95) OR
                         # 2. Good title similarity (>90) AND some author overlap
-                        if title_sim > 95 or (title_sim > 90 and author_overlap > 0.1):
-                            seen[ckey] = DedupService.merge(existing, paper)
-                            merged = True
-                            break
-                        # Also merge if significant author overlap with any title similarity
-                        elif author_overlap > self.config.author_overlap_threshold:
+                        if (
+                            title_sim > 95
+                            or (title_sim > 90 and author_overlap > 0.1)
+                            or author_overlap > self.config.author_overlap_threshold
+                        ):
                             seen[ckey] = DedupService.merge(existing, paper)
                             merged = True
                             break

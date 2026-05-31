@@ -59,6 +59,7 @@ def test_export_json() -> None:
     papers = _sample_papers()
     json_text = export_json(papers)
     import json
+
     data = json.loads(json_text)
     assert len(data) == 2
     assert data[0]["title"] == "Attention Is All You Need"

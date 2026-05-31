@@ -19,7 +19,6 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Optional
 
 from loguru import logger
 
@@ -149,7 +148,7 @@ class SpellChecker:
         "attetion": "attention",
         "atention": "attention",
         "transfomer": "transformer",
-        "transfomer": "transformer",
+        "transformr": "transformer",
         "classifiction": "classification",
         "classifiation": "classification",
         "segmantation": "segmentation",

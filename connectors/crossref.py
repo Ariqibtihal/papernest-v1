@@ -23,7 +23,9 @@ class CrossrefConnector(BaseConnector):
         self.headers = {"User-Agent": settings.user_agent}
         self.mailto = settings.contact_email
 
-    async def search(self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0) -> tuple[list[PaperDTO], int]:
+    async def search(
+        self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0
+    ) -> tuple[list[PaperDTO], int]:
         params: dict[str, Any] = {
             "query": query,
             "rows": limit,
@@ -38,11 +40,11 @@ class CrossrefConnector(BaseConnector):
         if filter_parts:
             params["filter"] = ",".join(filter_parts)
         data = await self._get_json(f"{self.base_url}/works", params=params, headers=self.headers)
-        
+
         message = data.get("message", {})
         total_results = message.get("total-results", 0)
         items = message.get("items", [])
-        
+
         papers = [self.normalize(item) for item in items if item.get("title")]
         filtered_papers = [paper for paper in papers if filters.match(paper)]
         return filtered_papers, total_results
@@ -58,7 +60,9 @@ class CrossrefConnector(BaseConnector):
     def normalize(self, raw: dict[str, Any]) -> PaperDTO:
         title = self._first(raw.get("title")) or "Untitled"
         container_title = self._first(raw.get("container-title"))
-        issued_date = self._date_from_parts(raw.get("published-print") or raw.get("published-online") or raw.get("issued"))
+        issued_date = self._date_from_parts(
+            raw.get("published-print") or raw.get("published-online") or raw.get("issued")
+        )
         authors = [self._normalize_author(author) for author in raw.get("author", [])]
         doi = raw.get("DOI")
         url = raw.get("URL")
@@ -87,7 +91,11 @@ class CrossrefConnector(BaseConnector):
         )
 
     async def health_check(self) -> bool:
-        data = await self._get_json(f"{self.base_url}/works", params={"rows": 0, "mailto": self.mailto}, headers=self.headers)
+        data = await self._get_json(
+            f"{self.base_url}/works",
+            params={"rows": 0, "mailto": self.mailto},
+            headers=self.headers,
+        )
         return data.get("status") == "ok"
 
     @staticmethod

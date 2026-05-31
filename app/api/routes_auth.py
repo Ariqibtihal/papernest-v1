@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from loguru import logger
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,8 +12,8 @@ from models.user import User
 from schemas.auth import Token, UserLogin, UserOut, UserRegister
 from services.auth_service import (
     authenticate_user,
-    create_refresh_token,
     create_access_token,
+    create_refresh_token,
     create_user,
     create_user_session,
     get_user_by_email,
@@ -27,6 +27,7 @@ router = APIRouter()
 
 # ── Request body schemas for token endpoints ──────────────────────────────────
 
+
 class RefreshRequest(BaseModel):
     refresh_token: str
 
@@ -36,6 +37,7 @@ class LogoutRequest(BaseModel):
 
 
 # ── Endpoints ─────────────────────────────────────────────────────────────────
+
 
 @router.post("/auth/register", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 @limiter.limit("5/minute")
@@ -104,16 +106,22 @@ async def refresh_token(
     """
     payload = verify_token(body.refresh_token)
     if not payload or payload.get("type") != "refresh":
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token"
+        )
 
     user_id_str = payload.get("sub")
     if not user_id_str:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token"
+        )
 
     try:
         user_id = int(user_id_str)
     except ValueError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token"
+        ) from None
 
     # Validate old token — this also checks expiry and revocation status
     user_session = await validate_refresh_token(session, body.refresh_token, user_id)

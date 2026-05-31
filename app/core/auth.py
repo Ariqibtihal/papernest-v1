@@ -24,37 +24,37 @@ async def get_current_user(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    
+
     token = credentials.credentials
     payload = verify_token(token)
-    
+
     if payload is None:
         raise credentials_exception
-    
+
     # Check if it's an access token
     if payload.get("type") != "access":
         raise credentials_exception
-    
+
     user_id_str: str | None = payload.get("sub")
     if user_id_str is None:
         raise credentials_exception
-    
+
     try:
         user_id = int(user_id_str)
     except ValueError:
-        raise credentials_exception
-    
+        raise credentials_exception from None
+
     user = await get_user_by_id(session, user_id)
-    
+
     if user is None:
         raise credentials_exception
-    
+
     if not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="User account is inactive",
         )
-    
+
     return user
 
 

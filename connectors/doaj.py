@@ -23,7 +23,9 @@ class DoajConnector(BaseConnector):
         settings = get_settings()
         self.headers = {"User-Agent": settings.user_agent}
 
-    async def search(self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0) -> tuple[list[PaperDTO], int]:
+    async def search(
+        self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0
+    ) -> tuple[list[PaperDTO], int]:
         page = (offset // limit) + 1
         params: dict[str, Any] = {
             "pageSize": limit,
@@ -31,10 +33,10 @@ class DoajConnector(BaseConnector):
         }
         url = f"{self.base_url}/{query}"
         data = await self._get_json(url, params=params, headers=self.headers)
-        
+
         total_results = data.get("total", 0)
         items = data.get("results", [])
-        
+
         papers = [self.normalize(item) for item in items]
         filtered_papers = [paper for paper in papers if paper and filters.match(paper)]
         return filtered_papers, total_results

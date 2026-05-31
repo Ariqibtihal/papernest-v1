@@ -6,9 +6,6 @@ These tests validate the search analytics functionality.
 
 from __future__ import annotations
 
-import time
-import pytest
-
 from services.search_analytics import SearchAnalytics, get_search_analytics
 
 

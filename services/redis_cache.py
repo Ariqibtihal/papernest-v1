@@ -19,6 +19,7 @@ Configuration:
 
 from __future__ import annotations
 
+import contextlib
 import json
 import time
 from typing import Any
@@ -164,10 +165,8 @@ class RedisCache:
     async def close(self) -> None:
         """Close Redis connection."""
         if self._redis:
-            try:
+            with contextlib.suppress(Exception):
                 await self._redis.close()
-            except Exception:
-                pass
 
     def _evict_fallback(self, max_entries: int = 1000) -> None:
         """Evict old entries from in-memory cache."""

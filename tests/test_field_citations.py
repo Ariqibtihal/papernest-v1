@@ -6,12 +6,10 @@ These tests validate the citation normalization functionality.
 
 from __future__ import annotations
 
-import pytest
-
 from services.field_citations import (
+    FIELD_STATS,
     AcademicField,
     FieldNormalizedCitations,
-    FIELD_STATS,
 )
 
 

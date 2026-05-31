@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from sqlalchemy.pool import NullPool, QueuePool
 
 from app.config import get_settings
-from app.db.base import Base
 
 _settings = get_settings()
 
@@ -17,11 +16,11 @@ if _settings.app_env == "production":
         echo=False,
         future=True,
         poolclass=QueuePool,
-        pool_size=20,              # Number of connections to maintain
-        max_overflow=10,           # Additional connections when pool is full
-        pool_timeout=30,           # Seconds to wait for connection
-        pool_recycle=3600,         # Recycle connections after 1 hour
-        pool_pre_ping=True,        # Verify connections before using
+        pool_size=20,  # Number of connections to maintain
+        max_overflow=10,  # Additional connections when pool is full
+        pool_timeout=30,  # Seconds to wait for connection
+        pool_recycle=3600,  # Recycle connections after 1 hour
+        pool_pre_ping=True,  # Verify connections before using
     )
 else:
     # Use NullPool for development/testing (better for async and testing)

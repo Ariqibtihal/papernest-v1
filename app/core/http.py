@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from typing import Optional
 import httpx
 
+
 class HTTPClientManager:
-    _client: Optional[httpx.AsyncClient] = None
+    _client: httpx.AsyncClient | None = None
 
     @classmethod
     def get_client(cls) -> httpx.AsyncClient:

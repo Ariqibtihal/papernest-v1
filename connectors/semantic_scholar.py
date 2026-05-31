@@ -32,7 +32,9 @@ class SemanticScholarConnector(BaseConnector):
             self.headers["x-api-key"] = settings.semantic_scholar_api_key
         self.headers["User-Agent"] = settings.user_agent
 
-    async def search(self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0) -> tuple[list[PaperDTO], int]:
+    async def search(
+        self, query: str, filters: SearchFilters, limit: int = 25, offset: int = 0
+    ) -> tuple[list[PaperDTO], int]:
         params: dict[str, Any] = {
             "query": query,
             "fields": self._FIELDS,
@@ -44,8 +46,10 @@ class SemanticScholarConnector(BaseConnector):
         elif filters.year_from is not None:
             params["publicationDateOrYear"] = f"{filters.year_from}:"
 
-        data = await self._get_json(f"{self.base_url}/paper/search", params=params, headers=self.headers)
-        
+        data = await self._get_json(
+            f"{self.base_url}/paper/search", params=params, headers=self.headers
+        )
+
         total_hits = data.get("total", 0)
         items = data.get("data", [])
         papers = [self.normalize(item) for item in items if item.get("title")]
