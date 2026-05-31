@@ -171,8 +171,8 @@ def cmd_setup(args: argparse.Namespace) -> int:
     ensure_uv()
     ensure_env()
 
-    info("Installing Python dependencies via uv (extras: frontend, dev)…")
-    run(["uv", "sync", "--extra", "frontend", "--extra", "dev"], cwd=ROOT)
+    info("Installing Python dependencies via uv (extra: dev)…")
+    run(["uv", "sync", "--extra", "dev"], cwd=ROOT)
 
     if args.skip_frontend:
         warn("Skip frontend setup karena --skip-frontend.")
@@ -392,7 +392,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         (
             "Project virtualenv exists (.venv)",
             venv_exists,
-            "Jalankan: paperlens setup (atau uv sync --extra frontend --extra dev)",
+            "Jalankan: paperlens setup (atau uv sync --extra dev)",
         )
     )
 
@@ -409,7 +409,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         (
             "Python deps in venv (loguru, uvicorn, fastapi)",
             deps_ok,
-            "Jalankan: uv sync --extra frontend --extra dev",
+            "Jalankan: uv sync --extra dev",
         )
     )
 

@@ -42,7 +42,7 @@ fi
 # ── 2. First-run sync ──────────────────────────────────────────
 if [ ! -d "$ROOT/.venv" ]; then
     echo "[paperlens] First run — installing Python dependencies..."
-    (cd "$ROOT" && uv sync --extra frontend --extra dev)
+    (cd "$ROOT" && uv sync --extra dev)
 fi
 
 # ── 3. Forward ke CLI ──────────────────────────────────────────

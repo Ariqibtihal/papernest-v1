@@ -45,7 +45,7 @@ if errorlevel 1 (
 if not exist "%ROOT%\.venv" (
     echo [paperlens] First run — installing Python dependencies...
     pushd "%ROOT%"
-    uv sync --extra frontend --extra dev
+    uv sync --extra dev
     set "SYNC_RC=!errorlevel!"
     popd
     if !SYNC_RC! neq 0 (
