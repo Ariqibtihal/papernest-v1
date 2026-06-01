@@ -65,7 +65,7 @@ After cloning, you only need **two commands** — just like a single-binary tool
 ### Windows
 
 ```cmd
-git clone https://github.com/yourusername/papernest.git
+git clone https://github.com/Ariqibtihal/papernest.git
 cd papernest
 
 paperlens.bat setup     :: install Python + Node deps, create .env
